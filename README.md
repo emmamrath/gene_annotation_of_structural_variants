@@ -47,7 +47,7 @@ Please note that this repository contains the component programs and scripts use
 * code/job_scripts/queue_jobs_for_consequences_submit_only_100.sh
 * code/job_scripts/queue_jobs_for_inhouse_structural_variant_annotation.sh
 
-### Pipeline programs to call INS/DEL/INDEL/DUP/INV and annotate with genes
+#### Pipeline programs to call INS/DEL/INDEL/DUP/INV and annotate with genes
 * code/programs/add_breakend_key_to_vcf_record.py
 * code/programs/add_key_to_VCF_to_find_inversions.py
 * code/programs/add_sample_key_to_VCF_to_merge_multiple_samples.py
