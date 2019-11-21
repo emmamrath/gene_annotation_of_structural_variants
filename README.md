@@ -7,7 +7,7 @@ The second input to this pipeline is a vcf file containing genomic DNA structura
 
 Gene locations were taken from [UCSC Tables](https://genome.ucsc.edu/cgi-bin/hgTables) and updated versions may be substituted.  
 
-This pipeline was created and used for the [MGRB project]((https://sgc.garvan.org.au/initiatives)). The [MGRB paper]((https://www.biorxiv.org/content/10.1101/473348v1)) can be considered the citation for this pipeline.  
+This pipeline was created and used for the [MGRB project](https://sgc.garvan.org.au/initiatives). The [MGRB paper](https://www.biorxiv.org/content/10.1101/473348v1) can be considered the citation for this pipeline.  
 
 Please note that this repository contains the component programs and scripts used for the MGRB project, and does not represent a ready-to-install-and-run pipeline.  
 
