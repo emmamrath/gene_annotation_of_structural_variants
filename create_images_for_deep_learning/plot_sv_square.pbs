@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -P na1
+#PBS -q normal
+#PBS -l walltime=30:00:00
+#PBS -l mem=50GB
+#PBS -l jobfs=2GB
+#PBS -l ncpus=1
+#PBS -l other=gdata3
+#PBS -l wd
+#PBS -N SVplot
+
+set -euo pipefail
+
+# INPUT: SAMPLEID, INFILE, OUTDIR
+
+queue_file="${OUTDIR}/${SAMPLEID}.svplot.queued"
+lock_file="${OUTDIR}/${SAMPLEID}.svplot.lock"
+done_file="${OUTDIR}/${SAMPLEID}.svplot.done"
+term_file="${OUTDIR}/${SAMPLEID}.svplot.term"
+log_file="${OUTDIR}/${SAMPLEID}.svplot.log"
+
+touch "${lock_file}"
+rm -f "${queue_file}"
+
+term_handler()
+{
+    rm -f "${lock_file}"
+    touch "${term_file}"
+    exit 1
+}
+trap 'term_handler' TERM
+
+module load python3/3.5.2
+module load python3/3.5.2-matplotlib
+module unload intel-fc intel-cc
+module load gcc/9.1.0
+
+export PYTHONPATH=/g/data3/wq2/users/emr913/software_various/python_libraries/python3.5.2/lib/python3.5/site-packages
+
+#TMPDIR="${PBS_JOBFS}/TMP"
+#mkdir -p "${TMPDIR}"
+
+python3 convert_gridss_SV_to_image.py -i "${INFILE}" -o "${OUTFILE}"
+
+echo 'Finished!'
+
+touch "${done_file}"
+rm -f "${lock_file}"
+
