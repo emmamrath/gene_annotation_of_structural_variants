@@ -72,6 +72,9 @@ Please note that this repository contains the component programs and scripts use
 * code/programs/choose_canonical_exons_from_UCSC_data_for_SV_consequences.R
 * code/programs/add_tranche_to_vcf.awk
 
+#### Reference data used by pipeline
+* reference_data # Only the first 10 lines of files are present, to show file format. Recent copies will need to be obtained from UCSC Tables.
+
 #### Pipeline components to prepare structural variants as images for deep learning
 * create_images_for_deep_learning/images_for_deep_learning_sv01_identify_non_white_space_in_variant_data.sh
 * create_images_for_deep_learning/images_for_deep_learning_sv02_create_non_white_space_mapping_file.py
