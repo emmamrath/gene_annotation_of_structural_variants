@@ -68,20 +68,20 @@ def get_tranche( this_format, infields ):
 	return this_tranche
 
 ######################################################
-def construct_LEFT_key( this_chrom, this_pos, this_alts, this_info ):
+def construct_LEFT_key( this_chrom, this_pos, this_alts, this_info, window ):
 
 	this_pos = int(this_pos)
 	if (this_pos < 1):
 		this_pos = 1
-	pos1 = this_pos - 1 - 100
+	pos1 = this_pos - 1 - window
 	if (pos1 < 0):
 		pos1 = 0
-	pos2 = this_pos + 100
+	pos2 = this_pos + window
 	return_key = str(this_chrom) + "\t" + str(pos1) + "\t" + str(pos2)
 	return return_key
 
 ######################################################
-def construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info ):
+def construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info, window ):
 
 	# One BND:          [1:937030[G
 	# One BND:          C]1:936513]
@@ -95,10 +95,10 @@ def construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info ):
 		if (this_key == 'END'):
 			found_INFO_END = True
 			this_INFO_END = int(key_and_value[1])
-			pos1 = this_INFO_END - 1 - 100
+			pos1 = this_INFO_END - 1 - window
 			if (pos1 < 0):
 				pos1 = 0
-			pos2 = this_INFO_END + 100
+			pos2 = this_INFO_END + window
 			return_key = str(this_chrom) + "\t" + str(pos1) + "\t" + str(pos2)
 	if (found_INFO_END == False):
 		# then look at first ALT
@@ -117,10 +117,10 @@ def construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info ):
 					colon_bits = this_bit.split( ':' )
 					this_RIGHT_chrom = str(colon_bits[0])
 					this_RIGHT_pos = int(colon_bits[1])
-					pos1 = this_RIGHT_pos - 1 - 100
+					pos1 = this_RIGHT_pos - 1 - window
 					if (pos1 < 0):
 						pos1 = 0
-					pos2 = this_RIGHT_pos + 100
+					pos2 = this_RIGHT_pos + window
 					return_key = str(this_RIGHT_chrom) + "\t" + str(pos1) + "\t" + str(pos2)
 	return return_key
 
@@ -131,6 +131,7 @@ def main():
 	parser = argparse.ArgumentParser(description='Add a bed key to beginning of each line of a VCF file - either POS or INFO.END')
 	parser.add_argument('-p', action="store", dest="position", required=True, help='LEFT or RIGHT, to specify whether key to add is POS or INFO.END')
 	parser.add_argument('-nohigh', action="store", dest="nohigh", required=False, help='If this flag is present with HIGH, do not include TRANCHE=HIGH variants. If it is INTERMEDIATE, do not include TRANCHE=HIGH or TRANCHE=INTERMEDIATE.')
+	parser.add_argument('-window', action="store", dest="window", required=False, help='If this flag is present then it specifies how many basepairs (bp) to add onto either side of the breakend point. Otherwise the default is 100 bp.')
 	args = parser.parse_args()
 
 	include_high_in_output = True
@@ -139,6 +140,9 @@ def main():
 		include_high_in_output = False
 		if (args.nohigh == 'INTERMEDIATE'):
 			include_intermediate_in_output = False
+	window = 100
+	if (args.window is not None):
+		window = int(args.window)
 
 	# Read in the input VCF file from STDIN
 
@@ -177,9 +181,9 @@ def main():
 			if (include_this_variant_in_output):
 				key_to_add = '.' + "\t" + '.' + "\t" + '.'
 				if (args.position == 'RIGHT'):
-					key_to_add = construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info )
+					key_to_add = construct_RIGHT_key( this_chrom, this_pos, this_alts, this_info, window )
 				else: # args.position == 'LEFT'
-					key_to_add = construct_LEFT_key( this_chrom, this_pos, this_alts, this_info )
+					key_to_add = construct_LEFT_key( this_chrom, this_pos, this_alts, this_info, window )
 
 				outline = key_to_add + "\t" + inline + "\n"
 				sys.stdout.write( outline )
